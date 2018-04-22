@@ -54,7 +54,7 @@ class BinaryString:
         assert(length > n)
         raise NotImplementedError
 
-    def bit_list(self):
+    def get_bit_list(self):
         lst = []
         curr_int = self.intvalue
         for x in range(self.length):
@@ -97,10 +97,10 @@ def construct_dag(N=DEFAULT_N):
         binstrs = [BinaryString(level, i) for i in range(2 ** level)]
         G.add_nodes_from(binstrs)
         for node in binstrs:
-            bit_list = node.bit_list()
+            bit_list = node.get_bit_list()
             G.add_edge(node, BinaryString(level - 1, bits_to_int(bit_list[:level - 1])))
     for leaf in binstrs:
-        bit_list = leaf.bit_list()
+        bit_list = leaf.get_bit_list()
         for i in range(1, len(bit_list) + 1):
             if bit_list[i - 1] == 1:
                 G.add_edge(BinaryString(i, bits_to_int(bit_list[:i - 1] + [0])), leaf)
