@@ -92,7 +92,7 @@ class BinaryString:
 
 DEFAULT_w = 10
 DEFAULT_t = 2**10 - 1
-DEFAULT_n = 10
+DEFAULT_n = 3
 DEFAULT_m = 10
 DEFAULT_N = 2**(DEFAULT_n + 1) - 1 
 
@@ -194,7 +194,7 @@ Verifier computes and outputs verify^H(chi, N, phi, gamma, tau)
 given either {accept, reject}
 We will let accept be True and reject be False
 """
-def verify(chi, phi, gamma, tau, N=DEFAULT_N, H=sha256H):
+def verify(chi, phi, gamma, tau, n=DEFAULT_n, N=DEFAULT_N, H=sha256H):
     G = construct_dag(N)
     for i in range(len(gamma)):
         # Check validity of l_{gamma_i}
@@ -202,15 +202,22 @@ def verify(chi, phi, gamma, tau, N=DEFAULT_N, H=sha256H):
         s_tags[gamma[i]] = tag
         hash_str = str(gamma[i])
         for parent in G.predecessors(gamma[i]):
+            if parent not in s_tags:
+                return False
             hash_str += s_tags[parent]
         if tag != H(chi, hash_str):
             return False
         # Check "Merkle-like commitment"
-        # for j in reversed(range(n)):
-        #     hash_str = str(gamma[i])[:j]
-
-
-
+        for j in reversed(range(n)):
+            hash_str = str(gamma[i])[:j]
+            gamma_l_0 = bits_to_int(gamma[i].get_bit_list()[:j] + [0])
+            gamma_l_1 = bits_to_int(gamma[i].get_bit_list()[:j] + [1])
+            gamma_l = bits_to_int(gamma[i].get_bit_list()[:j])
+            hash_str += s_tags[BinaryString(j + 1, gamma_l_0)]
+            hash_str += s_tags[BinaryString(j + 1, gamma_l_1)]
+            s_tags[BinaryString(j, gamma_l)] = H(chi, hash_str)
+        if phi != s_tags[BinaryString(0, 0)]:
+            return False
     return True
 
 
