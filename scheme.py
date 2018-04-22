@@ -136,19 +136,6 @@ phi = l_epsilon to the Verifier
 """
 def compute_posw(chi, N=DEFAULT_N, H=sha256H):
     G = construct_dag(N)
-    # Create a DAG with vertex set {0, ..., N-1}
-    # and first make the full binary tree, then add extra relationships
-    #               {empty}
-    #               /     \
-    #            {0}       {1}
-    #           /   \     /   \
-    #        {00}  {01} {10}  {11}
-    #        /  \  /  \ /  \  /  \
-    #      ... ... ... ... ... ... ... 
-    #          ( to n levels deep )
-    # Additionally, we will use the alternating path to the leaf. We will connect
-    # the leaf to the left siblings only for the path. Look at figure 3 in the 
-    # paper for more information
     for elem in nx.topological_sort(G):
         hash_str = str(elem)
         for parent in G.predecessors(elem):
@@ -184,9 +171,9 @@ def path_siblings(bitstring):
 Prover computes tau := open^H(chi, N, phi_P, gamma) and sends it to 
 the Verifier. phi_P will be passed in using a NetworkX graph G
 Returns a list of tuples described by
-    (l_{gamma_i}, [l_{the alternate siblings}])
+    (l_{gamma_i}, dict{alternate_siblings: l_{the alternate siblings})
 """
-def open(chi, phi_P, gamma, H=sha256H):
+def open(chi, G, gamma, H=sha256H):
     # On a challenge gamma = [gamma_1, ..., gamma_n]
     # tau the label of node gamma_i, l_{gamma_i}, and all the 
     # labels of the siblings of the nodes of path from gamma_i to root.
@@ -195,8 +182,10 @@ def open(chi, phi_P, gamma, H=sha256H):
     tuple_lst = []
     # First get the list 
     for gamma_i in gamma:
-        label_gamma_i = phi_P.node[gamma_i]['label']
-        label_gamma_i_siblings = [phi_P.node[x]['label'] for x in path_siblings(gamma_i)]
+        label_gamma_i = G.node[gamma_i]['label']
+        label_gamma_i_siblings = {}
+        for sib in path_siblings(gamma_i):
+            label_gamma_i_siblings[sib] = G.node[sib]['label']
         tuple_lst += [(label_gamma_i, label_gamma_i_siblings)]
     return tuple_lst 
 
@@ -205,13 +194,23 @@ Verifier computes and outputs verify^H(chi, N, phi, gamma, tau)
 given either {accept, reject}
 We will let accept be True and reject be False
 """
-def verify(chi, phi, gamma, tau, H=sha256H):
-    # Check validity of l_{gamma_i}
+def verify(chi, phi, gamma, tau, N=DEFAULT_N, H=sha256H):
+    G = construct_dag(N)
     for i in range(len(gamma)):
-        tag, parent_tags = tau[i]
-        print(tag, H(chi, str(gamma[i]).join(parent_tags)))
-        if tag != H(chi, str(gamma[i]).join(parent_tags)):
+        # Check validity of l_{gamma_i}
+        tag, s_tags = tau[i]
+        s_tags[gamma[i]] = tag
+        hash_str = str(gamma[i])
+        for parent in G.predecessors(gamma[i]):
+            hash_str += s_tags[parent]
+        if tag != H(chi, hash_str):
             return False
+        # Check "Merkle-like commitment"
+        # for j in reversed(range(n)):
+        #     hash_str = str(gamma[i])[:j]
+
+
+
     return True
 
 
