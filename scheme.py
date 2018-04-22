@@ -1,7 +1,10 @@
 import random
 import networkx as nx
+import math
 from util import sha256, sha256H
 import copy
+import matplotlib.pyplot as plt
+
 
 """
 Relevant Parameters described in the paper
@@ -88,8 +91,11 @@ class BinaryString:
         return new_bin
 
 
+
 DEFAULT_w = 10
 DEFAULT_t = 2**10 - 1
+DEFAULT_n = 10
+DEFAULT_m = 10
 DEFAULT_N = 2**10 
 
 
@@ -100,14 +106,37 @@ Selects chi from (0, 1)^w as the nonce
 def statement(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
     return random.randint(0, 2**w - 1)
 
+def bits_to_int(bit_list):
+    val = 0
+    for i in range(len(bit_list)):
+        val *= 2
+        val += int(bit_list[i])
+    return val
+
+def construct_dag(N=DEFAULT_N):
+    G = nx.DiGraph()
+    n = int(math.log(N + 1, 2) - 1)
+    binstrs = []
+    for level in range(n+1):
+        binstrs = [BinaryString(level, i) for i in range(2 ** level)]
+        G.add_nodes_from(binstrs)
+        for node in binstrs:
+            bit_list = node.get_bit_list()
+            G.add_edge(node, BinaryString(level - 1, bits_to_int(bit_list[:level - 1])))
+    for leaf in binstrs:
+        bit_list = leaf.get_bit_list()
+        for i in range(1, len(bit_list) + 1):
+            if bit_list[i - 1] == 1:
+                G.add_edge(BinaryString(i, bits_to_int(bit_list[:i - 1] + [0])), leaf)
+    return G
 
 """
 Computes the function PoSW^Hx(N). It stores the the labels 
 phi_P of the m highest layers, and sends the root label
 phi = l_epsilon to the Verifier
 """
-def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=10, N=DEFAULT_N, H=sha256H):
-    G = nx.DiGraph()
+def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=DEFAULT_n, m=DEFAULT_m, N=DEFAULT_N, H=sha256H):
+    G = construct_dag(N)
     # Create a DAG with vertex set {0, ..., N-1}
     # and first make the full binary tree, then add extra relationships
     #               {empty}
@@ -121,9 +150,7 @@ def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=10, N=DEFAULT_N, H=sha256H):
     # Additionally, we will use the alternating path to the leaf. We will connect
     # the leaf to the left siblings only for the path. Look at figure 3 in the 
     # paper for more information
-    for level in range(n+1):
-        binstrs = [BinaryString(level, i) for i in range(2**level)]
-        G.add_nodes_from(binstrs)
+    print(nx.topological_sort(G))
     
     return G
 
@@ -223,3 +250,4 @@ if __name__ == '__main__':
     # graph_tests()
     # class_tests()
     test_path_siblings()
+    compute_posw(N=15)
