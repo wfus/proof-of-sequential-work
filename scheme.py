@@ -19,6 +19,32 @@ import hashlib
 import random
 import networkx as nx
 
+# Need to construct a custom class for binary string, 
+# since for our DAG we have to differentiate 
+# 01 and 1, unfortunately.
+# Therefore we will need both the length of the binary string 
+# and the value converted into an integer. 
+class BinaryString:
+    def __init__(self, length, intvalue):
+        assert(2 ** length > intvalue)
+        self.length = length
+        self.intvalue = intvalue
+    
+    def __eq__(self, other):
+        return other and self.length == other.length and self.intvalue == other.intvalue
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
+    def __hash__(self):
+        return hash((self.length, self.intvalue))
+
+    def __str__(self):
+        first = "Length {}".format(self.length)
+        second = ",{0:b}".format(self.intvalue)
+        return first + second
+
+
 """
 Hashes an int using the sha256 algorithm, you have to first convert
 to string first and back to an integer after getting the hex output
@@ -40,11 +66,11 @@ def sha256H(nonce, x):
     return int(h.hexdigest(), 16) 
 
 
-
-
 DEFAULT_w = 10
 DEFAULT_t = 2**10 - 1
-DEFAULT_N = 10000
+DEFAULT_N = 2**10 
+
+
 
 """
 Selects chi from (0, 1)^w as the nonce
@@ -59,8 +85,10 @@ phi_P of the m highest layers, and sends the root label
 phi = l_epsilon to the Verifier
 """
 def compute_posw(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N, H=sha256H):
-    raise NotImplementedError
-
+    # Create a DAG with vertex set {0, ..., N-1}
+    # and first make the full binary tree, then add extra relationships
+    G = nx.DiGraph()
+    G.add_nodes_from(range(N))
 """
 Samples a random challenge gamma <- (0, 1)^{w * t}, essentially a list
 of random gamma_1, ..., gamma_t sampled from (0, 1)^w
@@ -99,6 +127,12 @@ def random_tests():
     g.add_nodes_from([2, 3])
     g.add_edge(1, 2)    
     print(g.nodes)
+
+    print(BinaryString(3, 3))
+    print(BinaryString(7, 31))
+    print(BinaryString(1, 1))
+    print(BinaryString(1, 0))
+
 
 
 if __name__ == '__main__':
