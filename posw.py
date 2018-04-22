@@ -7,18 +7,18 @@ DEFAULT_n = 10
 DEFAULT_N = 2**(DEFAULT_n + 1) - 1 
 
 
-def verifier_init(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
-    return statement(w=w, t=t, N=N)
+def verifier_init(w=DEFAULT_w):
+    return statement(w=w)
 
 
-def prover_init(chi, w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N, H=sha256H):
-    return compute_posw(chi, N=N, H=H)
+def prover_init(chi, H=sha256H):
+    return compute_posw(chi, H=H)
 
 def verifier_challenge(n=DEFAULT_n, t=DEFAULT_t):
     return opening_challenge(n=n, t=t)
 
 
-def prover_challenge(chi, G, gamma, H=sha256H):
+def prover_challenge(chi, G, gamma):
     return open(chi, G, gamma)
 
 

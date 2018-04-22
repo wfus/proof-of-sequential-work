@@ -92,18 +92,13 @@ class BinaryString:
 
 DEFAULT_w = 10
 DEFAULT_t = 2**10 - 1
-DEFAULT_n = 3
+DEFAULT_n = 10
 DEFAULT_m = 10
 DEFAULT_N = 2**(DEFAULT_n + 1) - 1 
 
-
-
 """
-Selects chi from (0, 1)^w as the nonce
+Converts bit list to integer
 """
-def statement(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
-    return random.randint(0, 2**w - 1)
-
 def bits_to_int(bit_list):
     val = 0
     for i in range(len(bit_list)):
@@ -111,6 +106,9 @@ def bits_to_int(bit_list):
         val += int(bit_list[i])
     return val
 
+"""
+Creates the DAG for a given size of graph
+"""
 def construct_dag(N=DEFAULT_N):
     G = nx.DiGraph()
     n = int(math.log(N + 1, 2) - 1)
@@ -129,12 +127,20 @@ def construct_dag(N=DEFAULT_N):
                 G.add_edge(BinaryString(i, bits_to_int(bit_list[:i - 1] + [0])), leaf)
     return G
 
+
+"""
+Selects chi from (0, 1)^w as the nonce
+"""
+def statement(w=DEFAULT_w):
+    return random.randint(0, 2**w - 1)
+
+
 """
 Computes the function PoSW^Hx(N). It stores the the labels 
 phi_P of the m highest layers, and sends the root label
 phi = l_epsilon to the Verifier
 """
-def compute_posw(chi, N=DEFAULT_N, H=sha256H):
+def compute_posw(chi, H=sha256H):
     G = construct_dag(N)
     for elem in nx.topological_sort(G):
         hash_str = str(elem)
@@ -148,7 +154,7 @@ def compute_posw(chi, N=DEFAULT_N, H=sha256H):
 Samples a random challenge gamma <- (0, 1)^{w * t}, essentially a list
 of random gamma_1, ..., gamma_t sampled from (0, 1)^w
 """
-def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, N=DEFAULT_N):
+def opening_challenge(n=DEFAULT_n, t=DEFAULT_t):
     return [BinaryString(n, random.randint(0, 2**n - 1)) for i in range(t)]
 
 
@@ -173,7 +179,7 @@ the Verifier. phi_P will be passed in using a NetworkX graph G
 Returns a list of tuples described by
     (l_{gamma_i}, dict{alternate_siblings: l_{the alternate siblings})
 """
-def open(chi, G, gamma, H=sha256H):
+def open(chi, G, gamma):
     # On a challenge gamma = [gamma_1, ..., gamma_n]
     # tau the label of node gamma_i, l_{gamma_i}, and all the 
     # labels of the siblings of the nodes of path from gamma_i to root.
