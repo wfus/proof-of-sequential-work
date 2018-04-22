@@ -28,14 +28,14 @@ def sha256(x):
     return int(h.hexdigest(), 16)
 
 
-DEFAULT_W = 10
+DEFAULT_w = 10
 DEFAULT_t = 2**10 - 1
 DEFAULT_N = 10000
 
 """
 Selects chi from (0, 1)^w as the nonce
 """
-def statement(w=DEFAULT_W, t=DEFAULT_t, N=DEFAULT_N):
+def statement(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
     return random.randint(0, 2**w - 1)
 
 
