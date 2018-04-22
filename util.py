@@ -10,7 +10,7 @@ to string first and back to an integer after getting the hex output
 def sha256(x):
     h = hashlib.sha256()
     h.update(str(x).encode('utf-8'))
-    return int(h.hexdigest(), 16)
+    return '{0:0256b}'.format(int(h.hexdigest(), 16))
 
 
 """
@@ -22,4 +22,4 @@ def sha256H(nonce, x):
     first = str(nonce).encode('utf-8')
     second = str(x).encode('utf-8')
     h.update(first+second)
-    return int(h.hexdigest(), 16) 
+    return h.hexdigest()
