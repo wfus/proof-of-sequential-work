@@ -46,6 +46,12 @@ class BinaryString:
         first = "Length {}".format(self.length)
         second = ",{0:b}".format(self.intvalue)
         return first + second
+    
+    # Flips the n^th least significant bit from 0 to 1 or vice versa
+    def flipbit(self, n):
+        assert(length > n)
+        raise NotImplementedError
+
 
 
 DEFAULT_w = 10
@@ -82,7 +88,7 @@ def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=10, N=DEFAULT_N, H=sha256H):
     # the leaf to the left siblings only for the path. Look at figure 3 in the 
     # paper for more information
     for level in range(n+1):
-        binstrs = [BinaryString(level, i) for i in range(2**n)]
+        binstrs = [BinaryString(level, i) for i in range(2**level)]
         G.add_nodes_from(binstrs)
     
     return G
@@ -133,8 +139,12 @@ def random_tests():
     print(BinaryString(1, 0))
 
 
+def graph_tests():
+    G = compute_posw()
+    print(G.nodes)
+
 
 if __name__ == '__main__':
-    random_tests() 
-
+    # random_tests() 
+    graph_tests()
 
