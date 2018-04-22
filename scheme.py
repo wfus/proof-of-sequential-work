@@ -1,6 +1,8 @@
 import random
 import networkx as nx
+import math
 from util import sha256, sha256H
+import matplotlib.pyplot as plt
 
 
 """
@@ -52,7 +54,7 @@ class BinaryString:
         assert(length > n)
         raise NotImplementedError
 
-    def get_bit_list(self):
+    def bit_list(self):
         lst = []
         curr_int = self.intvalue
         for x in range(self.length):
@@ -60,13 +62,11 @@ class BinaryString:
             curr_int = (curr_int >> 1)
         return lst 
 
-
     def truncate_last_bit(self, n):
         new_bin = BinaryString(self.length, self.intvalue)
         new_bin.intvalue = (self.intvalue >> 1)
         new_bin.length = self.length-1
         return new_bin
-        raise NotImplementedError
 
 DEFAULT_w = 10
 DEFAULT_t = 2**10 - 1
@@ -82,17 +82,28 @@ Selects chi from (0, 1)^w as the nonce
 def statement(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
     return random.randint(0, 2**w - 1)
 
+def bits_to_int(bit_list):
+    val = 0
+    for i in range(len(bit_list)):
+        val *= 2
+        val += int(bit_list[i])
+    return val
+
 def construct_dag(N=DEFAULT_N):
     G = nx.DiGraph()
+    n = int(math.log(N + 1, 2) - 1)
     binstrs = []
     for level in range(n+1):
         binstrs = [BinaryString(level, i) for i in range(2 ** level)]
         G.add_nodes_from(binstrs)
+        for node in binstrs:
+            bit_list = node.bit_list()
+            G.add_edge(node, BinaryString(level - 1, bits_to_int(bit_list[:level - 1])))
     for leaf in binstrs:
-        bit_list = leaf.bit_list
-        for i in range(1, len(bit_list)):
-            if bit_list[i] == '1':
-                G.add_edge(BinaryString(n - i, bit_list[:i]), leaf)
+        bit_list = leaf.bit_list()
+        for i in range(1, len(bit_list) + 1):
+            if bit_list[i - 1] == 1:
+                G.add_edge(BinaryString(i, bits_to_int(bit_list[:i - 1] + [0])), leaf)
     return G
 
 """
@@ -101,7 +112,7 @@ phi_P of the m highest layers, and sends the root label
 phi = l_epsilon to the Verifier
 """
 def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=DEFAULT_n, m=DEFAULT_m, N=DEFAULT_N, H=sha256H):
-    G = nx.DiGraph()
+    G = construct_dag(N)
     # Create a DAG with vertex set {0, ..., N-1}
     # and first make the full binary tree, then add extra relationships
     #               {empty}
@@ -115,9 +126,7 @@ def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=DEFAULT_n, m=DEFAULT_m, N=DEFAULT_N
     # Additionally, we will use the alternating path to the leaf. We will connect
     # the leaf to the left siblings only for the path. Look at figure 3 in the 
     # paper for more information
-    for level in range(n+1):
-        binstrs = [BinaryString(level, i) for i in range(2**level)]
-        G.add_nodes_from(binstrs)
+    print(nx.topological_sort(G))
     
     return G
 
@@ -187,4 +196,5 @@ def class_tests():
 if __name__ == '__main__':
     # random_tests() 
     # graph_tests()
-    class_tests()
+    # class_tests()
+    compute_posw(N=15)
