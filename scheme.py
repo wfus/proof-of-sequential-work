@@ -1,3 +1,8 @@
+import random
+import networkx as nx
+from util import sha256, sha256H
+
+
 """
 Relevant Parameters described in the paper
 
@@ -15,9 +20,6 @@ Relevant Parameters described in the paper
     0 <= m <= n
 """
 
-import hashlib
-import random
-import networkx as nx
 
 # Need to construct a custom class for binary string, 
 # since for our DAG we have to differentiate 
@@ -43,27 +45,6 @@ class BinaryString:
         first = "Length {}".format(self.length)
         second = ",{0:b}".format(self.intvalue)
         return first + second
-
-
-"""
-Hashes an int using the sha256 algorithm, you have to first convert
-to string first and back to an integer after getting the hex output
-"""
-def sha256(x):
-    h = hashlib.sha256()
-    h.update(str(x).encode('utf-8'))
-    return int(h.hexdigest(), 16)
-
-"""
-Takes in two integers, a nonce and x, to serve as our oracle function.
-This can be replaced with another function that can be used.  
-"""
-def sha256H(nonce, x):
-    h = hashlib.sha256()
-    first = str(nonce).encode('utf-8')
-    second = str(x).encode('utf-8')
-    h.update(first+second)
-    return int(h.hexdigest(), 16) 
 
 
 DEFAULT_w = 10
