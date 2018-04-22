@@ -26,12 +26,24 @@ def sha256(x):
     return int(h.hexdigest(), 16)
 
 
-def prover():
+def statement():
     raise NotImplementedError
 
 
-def verifier():
+def compute_posw():
     raise NotImplementedError
+
+
+def opening_challenge():
+    raise NotImplementedError 
+
+
+def open():
+    raise NotImplementedError  
+
+
+def verify():
+    raise NotImplementedError 
 
 
 
