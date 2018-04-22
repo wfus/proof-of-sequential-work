@@ -183,6 +183,8 @@ def path_siblings(bitstring):
 """
 Prover computes tau := open^H(chi, N, phi_P, gamma) and sends it to 
 the Verifier. phi_P will be passed in using a NetworkX graph G
+Returns a list of tuples described by
+    (l_{gamma_i}, [l_{the alternate siblings}])
 """
 def open(chi, phi_P, gamma, N=DEFAULT_N, H=sha256H):
     # On a challenge gamma = [gamma_1, ..., gamma_n]
@@ -190,13 +192,13 @@ def open(chi, phi_P, gamma, N=DEFAULT_N, H=sha256H):
     # labels of the siblings of the nodes of path from gamma_i to root.
     # Example for gamma_i = 0101
     # tau contains labels of: 0101, 0100, 011, 00 and 1
-    labels_dct = {}
-    labels_needed = []
+    tuple_lst = []
     # First get the list 
     for gamma_i in gamma:
-        labels_needed += path_siblings(gamma_i)
-    raise NotImplementedError
-    return labels_dct  
+        label_gamma_i = phi_P.node[gamma_i]['label']
+        label_gamma_i_siblings = [phi_P.node[x]['label'] for x in path_siblings(gamma_i)]
+        tuple_lst += (label_gamma_i, label_gamma_i_siblings)
+    return tuple_lst 
 
 """
 Verifier computes and outputs verify^H(chi, N, phi, gamma, tau)
