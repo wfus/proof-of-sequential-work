@@ -1,3 +1,7 @@
 # Gitignore for MAC
 *DS_Store
 *.*DS_Store
+
+
+# Python
+*.pyc
