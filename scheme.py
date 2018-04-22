@@ -140,7 +140,7 @@ Computes the function PoSW^Hx(N). It stores the the labels
 phi_P of the m highest layers, and sends the root label
 phi = l_epsilon to the Verifier
 """
-def compute_posw(chi, H=sha256H):
+def compute_posw(chi, N=DEFAULT_N, H=sha256H):
     G = construct_dag(N)
     for elem in nx.topological_sort(G):
         hash_str = str(elem)

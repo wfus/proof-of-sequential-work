@@ -11,8 +11,8 @@ def verifier_init(w=DEFAULT_w):
     return statement(w=w)
 
 
-def prover_init(chi, H=sha256H):
-    return compute_posw(chi, H=H)
+def prover_init(chi, N=DEFAULT_N, H=sha256H):
+    return compute_posw(chi, N=N, H=H)
 
 def verifier_challenge(n=DEFAULT_n, t=DEFAULT_t):
     return opening_challenge(n=n, t=t)
