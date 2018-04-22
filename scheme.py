@@ -52,6 +52,11 @@ def statement(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
     return random.randint(0, 2**w - 1)
 
 
+"""
+Computes the function PoSW^Hx(N). It stores the the labels 
+φ_P of the m highest layers, and sends the root label
+φ = l_epsilon to the Verifier
+"""
 def compute_posw(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
     raise NotImplementedError
 
@@ -66,7 +71,7 @@ def opening_challenge(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
 Prover computes tau := open^H(chi, N, phi_P, gamma) and sends it to 
 the Verifier
 """
-def open(chi, phi_P, gamma, N=DEFAULT_N):
+def open(chi, phi_P, gamma, N=DEFAULT_N, H=sha256H):
     raise NotImplementedError  
 
 """
@@ -74,7 +79,7 @@ Verifier computes and outputs verify^H(chi, N, phi, gamma, tau)
 given either {accept, reject}
 We will let accept be True and reject be False
 """
-def verify(chi, phi, gamma, tau, N=DEFAULT_N):
+def verify(chi, phi, gamma, tau, N=DEFAULT_N, H=sha256H):
     raise NotImplementedError 
 
 

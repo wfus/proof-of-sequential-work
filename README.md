@@ -7,6 +7,10 @@ The scheme is described in the paper as
 
 ![Overall Scheme](docs/overallscheme.png)
 
+The DAG used for the scheme is also constructed with specifications
+
+![DAG Specifications](docs/graphdef.png)
+
 ## Acknowledgements
 Many thanks to Professor Kung for his intellectually interesting discussions, as well as Marcus Comiter for all the help in the class. 
 
