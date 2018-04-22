@@ -17,6 +17,7 @@ Relevant Parameters described in the paper
 
 import hashlib
 import random
+import networkx as nx
 
 """
 Hashes an int using the sha256 algorithm, you have to first convert
@@ -54,10 +55,10 @@ def statement(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
 
 """
 Computes the function PoSW^Hx(N). It stores the the labels 
-φ_P of the m highest layers, and sends the root label
-φ = l_epsilon to the Verifier
+phi_P of the m highest layers, and sends the root label
+phi = l_epsilon to the Verifier
 """
-def compute_posw(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
+def compute_posw(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N, H=sha256H):
     raise NotImplementedError
 
 """
@@ -92,6 +93,12 @@ def random_tests():
     print(sha256H(11, 0))
     print(sha256H(100, 1))
     print(sha256H(11, 100))
+
+    g = nx.DiGraph()
+    g.add_node(1)
+    g.add_nodes_from([2, 3])
+    g.add_edge(1, 2)    
+    print(g.nodes)
 
 
 if __name__ == '__main__':
