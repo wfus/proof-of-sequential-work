@@ -46,9 +46,7 @@ class BinaryString:
         return hash((self.length, self.intvalue))
 
     def __str__(self):
-        first = "Length {}".format(self.length)
-        second = ",{0:b}".format(self.intvalue)
-        return first + second
+        return ''.join(list(map(str, self.get_bit_list())))
     
     # Flips the n^th least significant bit from 0 to 1 or vice versa
     def flip_bit(self, n):
@@ -120,9 +118,10 @@ def construct_dag(N=DEFAULT_N):
     for level in range(n+1):
         binstrs = [BinaryString(level, i) for i in range(2 ** level)]
         G.add_nodes_from(binstrs)
-        for node in binstrs:
-            bit_list = node.get_bit_list()
-            G.add_edge(node, BinaryString(level - 1, bits_to_int(bit_list[:level - 1])))
+        if level > 0:
+            for node in binstrs:
+                bit_list = node.get_bit_list()
+                G.add_edge(node, BinaryString(level - 1, bits_to_int(bit_list[:level - 1])))
     for leaf in binstrs:
         bit_list = leaf.get_bit_list()
         for i in range(1, len(bit_list) + 1):
@@ -135,7 +134,7 @@ Computes the function PoSW^Hx(N). It stores the the labels
 phi_P of the m highest layers, and sends the root label
 phi = l_epsilon to the Verifier
 """
-def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=DEFAULT_n, m=DEFAULT_m, N=DEFAULT_N, H=sha256H):
+def compute_posw(chi, w=DEFAULT_w, t=DEFAULT_t, n=DEFAULT_n, m=DEFAULT_m, N=DEFAULT_N, H=sha256H):
     G = construct_dag(N)
     # Create a DAG with vertex set {0, ..., N-1}
     # and first make the full binary tree, then add extra relationships
@@ -150,8 +149,11 @@ def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=DEFAULT_n, m=DEFAULT_m, N=DEFAULT_N
     # Additionally, we will use the alternating path to the leaf. We will connect
     # the leaf to the left siblings only for the path. Look at figure 3 in the 
     # paper for more information
-    print(nx.topological_sort(G))
-    
+    for elem in nx.topological_sort(G):
+        hash_str = str(elem)
+        for parent in G.predecessors(elem):
+            hash_str += str(G.node[parent]['label'])
+        G.node[elem]['label'] = H(chi, hash_str)
     return G
 
 
@@ -255,5 +257,5 @@ if __name__ == '__main__':
     # random_tests() 
     # graph_tests()
     # class_tests()
-    test_path_siblings()
-    compute_posw(N=15)
+    # test_path_siblings()
+    # compute_posw(N=15)
