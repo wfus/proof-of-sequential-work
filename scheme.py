@@ -57,7 +57,7 @@ class BinaryString:
             self.intvalue = self.intvalue + (2 ** n) 
         else:
             self.intvalue = self.intvalue - (2 ** n) 
-
+        return BinaryString(self.length, self.intvalue)
 
     def set_bit(self, n, bitvalue):
         assert(self.length > n)
@@ -180,7 +180,7 @@ def path_siblings(bitstring):
 
 """
 Prover computes tau := open^H(chi, N, phi_P, gamma) and sends it to 
-the Verifier
+the Verifier. phi_P will be passed in using a NetworkX graph G
 """
 def open(chi, phi_P, gamma, N=DEFAULT_N, H=sha256H):
     # On a challenge gamma = [gamma_1, ..., gamma_n]
@@ -188,10 +188,13 @@ def open(chi, phi_P, gamma, N=DEFAULT_N, H=sha256H):
     # labels of the siblings of the nodes of path from gamma_i to root.
     # Example for gamma_i = 0101
     # tau contains labels of: 0101, 0100, 011, 00 and 1
-    label_dct = {}
+    labels_dct = {}
+    labels_needed = []
+    # First get the list 
     for gamma_i in gamma:
-        print("kung")
-    raise NotImplementedError  
+        labels_needed += path_siblings(gamma_i)
+    raise NotImplementedError
+    return labels_dct  
 
 """
 Verifier computes and outputs verify^H(chi, N, phi, gamma, tau)
@@ -241,8 +244,11 @@ def class_tests():
 
 
 def test_path_siblings():
-    print(path_siblings(BinaryString(5, 10)))
-    print(path_siblings(BinaryString(4, 10)))
+    for x in path_siblings(BinaryString(5, 10)):
+        print(x)
+
+    for x in path_siblings(BinaryString(4, 10)):
+        print(x)
 
 
 if __name__ == '__main__':
