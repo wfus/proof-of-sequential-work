@@ -22,4 +22,4 @@ def sha256H(nonce, x):
     first = str(nonce).encode('utf-8')
     second = str(x).encode('utf-8')
     h.update(first+second)
-    return h.hexdigest()
+    return '{0:0256b}'.format(int(h.hexdigest(), 16))
