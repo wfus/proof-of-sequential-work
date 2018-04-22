@@ -78,6 +78,9 @@ def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=10, N=DEFAULT_N, H=sha256H):
     #        /  \  /  \ /  \  /  \
     #      ... ... ... ... ... ... ... 
     #          ( to n levels deep )
+    # Additionally, we will use the alternating path to the leaf. We will connect
+    # the leaf to the left siblings only for the path. Look at figure 3 in the 
+    # paper for more information
     for level in range(n+1):
         binstrs = [BinaryString(level, i) for i in range(2**n)]
         G.add_nodes_from(binstrs)
