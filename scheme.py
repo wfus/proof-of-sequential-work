@@ -28,15 +28,18 @@ def sha256(x):
     return int(h.hexdigest(), 16)
 
 
+DEFAULT_W = 10
+DEFAULT_t = 2**10 - 1
+DEFAULT_N = 10000
 
 """
 Selects chi from (0, 1)^w as the nonce
 """
-def statement(w, t=1023, N=10000):
+def statement(w=DEFAULT_W, t=DEFAULT_t, N=DEFAULT_N):
     return random.randint(0, 2**w - 1)
 
 
-def compute_posw():
+def compute_posw(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
     raise NotImplementedError
 
 
@@ -55,16 +58,6 @@ def verify():
 
 def random_tests(): 
     print("Selecting from (0, 1)^1")
-    print(statement(1))
-    print(statement(1))
-    print(statement(1))
-    print(statement(1))
-
-    print("Selecting from (0, 1)^3")
-    print(statement(3))
-    print(statement(3))
-    print(statement(3))
-    print(statement(3))
 
 if __name__ == '__main__':
     random_tests() 
