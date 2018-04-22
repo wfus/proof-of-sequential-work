@@ -48,10 +48,30 @@ class BinaryString:
         return first + second
     
     # Flips the n^th least significant bit from 0 to 1 or vice versa
-    def flipbit(self, n):
+    def flip_bit(self, n):
         assert(length > n)
-        raise NotImplementedError
+        if get_bit(self, n) == 0:
+            self.intvalue = self.intvalue + (2 ** n) 
+        else:
+            self.intvalue = self.intvalue - (2 ** n) 
 
+
+    def set_bit(self, n, bitvalue):
+        assert(length > n)
+        assert(bitvalue == 1 || bitvalue == 0)
+        if bitvalue == 0:
+            if get_bit(self, n) == 1:
+                flip_bit(self, n)
+        else:
+            if get_bit(self, n) == 0:
+                flip_bit(self, n)
+
+
+    # Gets the nth least significant bit. 
+    def get_bit(self, n):
+        assert(length > n)
+        return (self.intvalue >> n) % 2
+    
     def get_bit_list(self):
         lst = []
         curr_int = self.intvalue
@@ -66,7 +86,7 @@ class BinaryString:
         new_bin.intvalue = (self.intvalue >> 1)
         new_bin.length = self.length-1
         return new_bin
-        raise NotImplementedError
+
 
 DEFAULT_w = 10
 DEFAULT_t = 2**10 - 1
