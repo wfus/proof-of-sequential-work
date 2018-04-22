@@ -52,7 +52,21 @@ class BinaryString:
         assert(length > n)
         raise NotImplementedError
 
+    def get_bit_list(self):
+        lst = []
+        curr_int = self.intvalue
+        for x in range(self.length):
+            lst = [curr_int % 2] + lst
+            curr_int = (curr_int >> 1)
+        return lst 
 
+
+    def truncate_last_bit(self, n):
+        new_bin = BinaryString(self.length, self.intvalue)
+        new_bin.intvalue = (self.intvalue >> 1)
+        new_bin.length = self.length-1
+        return new_bin
+        raise NotImplementedError
 
 DEFAULT_w = 10
 DEFAULT_t = 2**10 - 1
@@ -120,6 +134,8 @@ Prover computes tau := open^H(chi, N, phi_P, gamma) and sends it to
 the Verifier
 """
 def open(chi, phi_P, gamma, N=DEFAULT_N, H=sha256H):
+    # On a challenge gamma = [gamma_1, ..., gamma_n]
+    # tau containa
     raise NotImplementedError  
 
 """
@@ -158,7 +174,17 @@ def graph_tests():
     print(G.nodes)
 
 
+def class_tests():
+    test1 = BinaryString(5, 10)
+    test2 = BinaryString(1, 1)
+    test3 = BinaryString(0, 0)
+    test4 = BinaryString(10, 231)
+    print(test1.get_bit_list())
+    print(test2.get_bit_list())
+    print(test3.get_bit_list())
+    print(test4.get_bit_list())
+
 if __name__ == '__main__':
     # random_tests() 
-    graph_tests()
-
+    # graph_tests()
+    class_tests()
