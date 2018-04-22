@@ -25,7 +25,8 @@ Relevant Parameters described in the paper
 # since for our DAG we have to differentiate 
 # 01 and 1, unfortunately.
 # Therefore we will need both the length of the binary string 
-# and the value converted into an integer. 
+# and the value converted into an integer.
+# The {EMPTY} binary string will be length 0, intvalue 0  
 class BinaryString:
     def __init__(self, length, intvalue):
         assert(2 ** length > intvalue)
@@ -65,11 +66,25 @@ Computes the function PoSW^Hx(N). It stores the the labels
 phi_P of the m highest layers, and sends the root label
 phi = l_epsilon to the Verifier
 """
-def compute_posw(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N, H=sha256H):
+def compute_posw(w=DEFAULT_w, t=DEFAULT_t, n=10, N=DEFAULT_N, H=sha256H):
+    G = nx.DiGraph()
     # Create a DAG with vertex set {0, ..., N-1}
     # and first make the full binary tree, then add extra relationships
-    G = nx.DiGraph()
-    G.add_nodes_from(range(N))
+    #               {empty}
+    #               /     \
+    #            {0}       {1}
+    #           /   \     /   \
+    #        {00}  {01} {10}  {11}
+    #        /  \  /  \ /  \  /  \
+    #      ... ... ... ... ... ... ... 
+    #          ( to n levels deep )
+    for level in range(n+1):
+        binstrs = [BinaryString(level, i) for i in range(2**n)]
+        G.add_nodes_from(binstrs)
+    
+    return G
+
+
 """
 Samples a random challenge gamma <- (0, 1)^{w * t}, essentially a list
 of random gamma_1, ..., gamma_t sampled from (0, 1)^w

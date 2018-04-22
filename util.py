@@ -1,5 +1,7 @@
 import hashlib
 import random
+import networkx as nx
+
 
 """
 Hashes an int using the sha256 algorithm, you have to first convert
@@ -9,6 +11,7 @@ def sha256(x):
     h = hashlib.sha256()
     h.update(str(x).encode('utf-8'))
     return int(h.hexdigest(), 16)
+
 
 """
 Takes in two integers, a nonce and x, to serve as our oracle function.
