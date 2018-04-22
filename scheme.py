@@ -42,9 +42,12 @@ def statement(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
 def compute_posw(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
     raise NotImplementedError
 
-
-def opening_challenge():
-    raise NotImplementedError 
+"""
+Samples a random challenge gamma <- (0, 1)^{w * t}, essentially a list
+of random gamma_1, ..., gamma_t sampled from (0, 1)^w
+"""
+def opening_challenge(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
+    return [random.randint(0, 2**w - 1) for i in range(t)]
 
 
 def open():
@@ -58,6 +61,7 @@ def verify():
 
 def random_tests(): 
     print("Selecting from (0, 1)^1")
+    print(opening_challenge(t=10))
 
 if __name__ == '__main__':
     random_tests() 
