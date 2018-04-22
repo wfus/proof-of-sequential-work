@@ -7,6 +7,8 @@ Relevant Parameters described in the paper
     H: (0, 1)^{<= w(n+1)} -> (0, 1)^w as a random oracle
 
     t: A statistical security parameter
+    
+    w: A statistical security parameter
 
     M: Memory available to the prover, of the form
         (t + n*t + 1 + 2^{m+1})w, 
@@ -26,8 +28,12 @@ def sha256(x):
     return int(h.hexdigest(), 16)
 
 
-def statement():
-    raise NotImplementedError
+
+"""
+Selects chi from (0, 1)^w as the nonce
+"""
+def statement(w, t=1023, N=10000):
+    return random.randint(0, 2**w - 1)
 
 
 def compute_posw():
@@ -48,9 +54,17 @@ def verify():
 
 
 def random_tests(): 
-    print(sha256(100))
-    print(sha256(200))
-    print(sha256(100))
+    print("Selecting from (0, 1)^1")
+    print(statement(1))
+    print(statement(1))
+    print(statement(1))
+    print(statement(1))
+
+    print("Selecting from (0, 1)^3")
+    print(statement(3))
+    print(statement(3))
+    print(statement(3))
+    print(statement(3))
 
 if __name__ == '__main__':
     random_tests() 
