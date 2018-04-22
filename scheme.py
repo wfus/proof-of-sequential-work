@@ -1,7 +1,7 @@
 import random
 import networkx as nx
 from util import sha256, sha256H
-
+import copy
 
 """
 Relevant Parameters described in the paper
@@ -49,16 +49,16 @@ class BinaryString:
     
     # Flips the n^th least significant bit from 0 to 1 or vice versa
     def flip_bit(self, n):
-        assert(length > n)
-        if get_bit(self, n) == 0:
+        assert(self.length > n)
+        if self.get_bit(n) == 0:
             self.intvalue = self.intvalue + (2 ** n) 
         else:
             self.intvalue = self.intvalue - (2 ** n) 
 
 
     def set_bit(self, n, bitvalue):
-        assert(length > n)
-        assert(bitvalue == 1 || bitvalue == 0)
+        assert(self.length > n)
+        assert(bitvalue == 1 or bitvalue == 0)
         if bitvalue == 0:
             if get_bit(self, n) == 1:
                 flip_bit(self, n)
@@ -69,7 +69,7 @@ class BinaryString:
 
     # Gets the nth least significant bit. 
     def get_bit(self, n):
-        assert(length > n)
+        assert(self.length > n)
         return (self.intvalue >> n) % 2
     
     def get_bit_list(self):
@@ -81,7 +81,7 @@ class BinaryString:
         return lst 
 
 
-    def truncate_last_bit(self, n):
+    def truncate_last_bit(self):
         new_bin = BinaryString(self.length, self.intvalue)
         new_bin.intvalue = (self.intvalue >> 1)
         new_bin.length = self.length-1
@@ -135,13 +135,35 @@ of random gamma_1, ..., gamma_t sampled from (0, 1)^w
 def opening_challenge(w=DEFAULT_w, t=DEFAULT_t, N=DEFAULT_N):
     return [random.randint(0, 2**w - 1) for i in range(t)]
 
+
+"""
+Takes in an instance of class BinaryString and returns a list of the 
+siblings of the nodes of the path to to root of a binary tree. Also
+returns the node itself, so there are N+1 items in the list for a 
+tree with length N. 
+"""
+def path_siblings(bitstring):
+    path_lst = [bitstring]
+    new_bitstring = BinaryString(bitstring.length, bitstring.intvalue)
+    for i in range(bitstring.length):
+        path_lst += [new_bitstring.flip_bit(0)]
+        new_bitstring = new_bitstring.truncate_last_bit() 
+    return path_lst
+
+
 """
 Prover computes tau := open^H(chi, N, phi_P, gamma) and sends it to 
 the Verifier
 """
 def open(chi, phi_P, gamma, N=DEFAULT_N, H=sha256H):
     # On a challenge gamma = [gamma_1, ..., gamma_n]
-    # tau containa
+    # tau the label of node gamma_i, l_{gamma_i}, and all the 
+    # labels of the siblings of the nodes of path from gamma_i to root.
+    # Example for gamma_i = 0101
+    # tau contains labels of: 0101, 0100, 011, 00 and 1
+    label_dct = {}
+    for gamma_i in gamma:
+        print("kung")
     raise NotImplementedError  
 
 """
@@ -190,7 +212,14 @@ def class_tests():
     print(test3.get_bit_list())
     print(test4.get_bit_list())
 
+
+def test_path_siblings():
+    print(path_siblings(BinaryString(5, 10)))
+    print(path_siblings(BinaryString(4, 10)))
+
+
 if __name__ == '__main__':
     # random_tests() 
     # graph_tests()
-    class_tests()
+    # class_tests()
+    test_path_siblings()
