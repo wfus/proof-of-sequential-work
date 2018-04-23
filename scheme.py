@@ -2,8 +2,8 @@ import random
 import networkx as nx
 import math
 from util import sha256, sha256H
-import copy
-import matplotlib.pyplot as plt
+# import copy
+# import matplotlib.pyplot as plt
 
 
 """
@@ -41,6 +41,14 @@ class BinaryString:
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __gt__(self, other):
+        if self.length > other.length:
+            return True
+        elif self.length == other.length:
+            return self.intvalue > other.intvalue
+        else:
+            return False
     
     def __hash__(self):
         return hash((self.length, self.intvalue))
