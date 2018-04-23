@@ -16,7 +16,7 @@ The parameters described in the paper (and are named in the same way in the sour
 * __N__: The time parameter which we assume is of the form
     2^n-1 for an integer n
 * __w__: A statistical security parameter from which the random nonce is generated from
-* __H__: A random oracle 
+* __H__: A random oracle (we used default of sha256) that maps (0, 1)* to (0, 1)^w
 
 ## Scheme
 The scheme is described in the paper as 
