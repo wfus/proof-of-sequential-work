@@ -1,6 +1,16 @@
 # proof-of-sequential-work
 Small repo for implementing the 2018 EUROCRYPT paper ["Simple Proofs of Sequential Work" by Cohen and Pietrzak](https://eprint.iacr.org/2018/183.pdf). Also used as part of our CS244 project in Professor Kung's class at Harvard University.
 
+This is currently a __experimental__ repository. 
+__DO NOT USE THE CURRENT VERSION OF THIS REPO IN ANY REAL WORLD PROGRAM__.
+
+I repeat
+
+__DO NOT USE THE CURRENT VERSION OF THIS REPO IN ANY REAL WORLD PROGRAM__.
+
+This is used as a proof of concept before we implement the scheme with 
+cryptographically secure primitives. 
+
 ## Usage
 
 Most of the scheme is implemented in ```scheme.py``` and the main functions for 
