@@ -1,6 +1,8 @@
 # proof-of-sequential-work
 Small repo for implementing the 2018 EUROCRYPT paper ["Simple Proofs of Sequential Work" by Cohen and Pietrzak](https://eprint.iacr.org/2018/183.pdf). Also used as part of our CS244 project in Professor Kung's class at Harvard University.
 
+__DO NOT USE THIS WITH PYTHON2! ONLY WORKS WITH PYTHON3!__
+
 ## Usage
 
 Most of the scheme is implemented in ```scheme.py``` and the main functions for 
@@ -12,6 +14,11 @@ prover and verifier.
 
 __DO NOT USE THIS WITH PYTHON2! USE THIS WITH PYTHON3__. The networkx dependency 
 doesn't work the same way in Python 2, and this causes some crippling issues. 
+
+Install the python requirements with 
+```
+pip install -r requirements.txt
+```
 
 ## Parameters 
 
