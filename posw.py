@@ -171,7 +171,8 @@ Computes the function PoSW^Hx(N). It stores the the labels
 phi_P of the m highest layers, and sends the root label
 phi = l_epsilon to the Verifier
 """
-def compute_posw(chi, G, n=DEFAULT_n, H=sha256H):
+def compute_posw(chi, n=DEFAULT_n, H=sha256H):
+    G = construct_dag(n)
     for elem in nx.topological_sort(G):
         hash_str = str(elem)
         for parent in get_parents(elem, n):
@@ -230,7 +231,7 @@ Verifier computes and outputs verify^H(chi, N, phi, gamma, tau)
 given either {accept, reject}
 We will let accept be True and reject be False
 """
-def compute_verify(chi, G, phi, gamma, tau, n=DEFAULT_n, H=sha256H):
+def compute_verify(chi, phi, gamma, tau, n=DEFAULT_n, H=sha256H):
     for i in range(len(gamma)):
         # Check validity of l_{gamma_i}
         tag, s_tags = tau[i]
@@ -310,8 +311,7 @@ if __name__ == '__main__':
     # compute_posw(N=15)
     print("Raymond.")
     chi = statement()
-    G = construct_dag()
-    G = compute_posw(chi, G)
+    G = compute_posw(chi)
     gamma = opening_challenge()
     tau = compute_open(chi, G, gamma)
-    print(compute_verify(chi, G, G.node[BinaryString(0, 0)]['label'], gamma, tau))
+    print(compute_verify(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau))
