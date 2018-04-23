@@ -2,8 +2,8 @@ import random
 import networkx as nx
 import math
 from util import sha256, sha256H
-import copy
-import matplotlib.pyplot as plt
+# import copy
+# import matplotlib.pyplot as plt
 
 
 """
