@@ -27,7 +27,7 @@ def verifier_check(chi, phi, gamma, tau, n=DEFAULT_n, N=DEFAULT_N, H=sha256H):
 
 if __name__ == '__main__':
     print('Raymond.')
-   chi = statement()
+    chi = statement()
     G = compute_posw(chi)
     gamma = opening_challenge()
     tau = open(chi, G, gamma)
