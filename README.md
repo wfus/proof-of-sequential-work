@@ -1,7 +1,9 @@
 # proof-of-sequential-work
 Small repo for implementing the 2018 EUROCRYPT paper ["Simple Proofs of Sequential Work" by Cohen and Pietrzak](https://eprint.iacr.org/2018/183.pdf). Also used as part of our CS244 project in Professor Kung's class at Harvard University.
 
-This is currently a __experimental__ repository. 
+This is currently a __experimental__ repository. We currently do not use
+cryptographically secure primitives because this is for __testing__.
+
 __DO NOT USE THE CURRENT VERSION OF THIS REPO IN ANY REAL WORLD PROGRAM__.
 
 I repeat
