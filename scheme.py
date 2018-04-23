@@ -45,6 +45,13 @@ class BinaryString:
     def __hash__(self):
         return hash((self.length, self.intvalue))
 
+    def __gt__(self, other):
+        if self.length > other.length:
+            return True
+        elif self.length < other.length:
+            return False
+        return self.intvalue > other.intvalue
+
     def __str__(self):
         return ''.join(list(map(str, self.get_bit_list())))
     
@@ -144,7 +151,7 @@ def compute_posw(chi, N=DEFAULT_N, H=sha256H):
     G = construct_dag(N)
     for elem in nx.topological_sort(G):
         hash_str = str(elem)
-        for parent in G.predecessors(elem):
+        for parent in sorted(list(G.predecessors(elem))):
             hash_str += str(G.node[parent]['label'])
         G.node[elem]['label'] = H(chi, hash_str)
     return G
@@ -207,7 +214,7 @@ def verify(chi, phi, gamma, tau, n=DEFAULT_n, N=DEFAULT_N, H=sha256H):
         tag, s_tags = tau[i]
         s_tags[gamma[i]] = tag
         hash_str = str(gamma[i])
-        for parent in G.predecessors(gamma[i]):
+        for parent in sorted(list(G.predecessors(gamma[i]))):
             if parent not in s_tags:
                 return False
             hash_str += s_tags[parent]
