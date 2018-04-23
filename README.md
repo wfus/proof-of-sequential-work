@@ -10,6 +10,9 @@ for use in other areas. You can run a small test by running
 which should return true. The file simulates running the scheme for an honest 
 prover and verifier. 
 
+__DO NOT USE THIS WITH PYTHON2! USE THIS WITH PYTHON3__. The networkx dependency 
+doesn't work the same way in Python 2, and this causes some crippling issues. 
+
 ## Parameters 
 
 The parameters described in the paper (and are named in the same way in the source code) are
