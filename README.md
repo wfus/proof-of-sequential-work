@@ -1,6 +1,22 @@
 # proof-of-sequential-work
 Small repo for implementing the 2018 EUROCRYPT paper ["Simple Proofs of Sequential Work" by Cohen and Pietrzak](https://eprint.iacr.org/2018/183.pdf). Also used as part of our CS244 project in Professor Kung's class at Harvard University.
 
+## Usage
+
+Most of the scheme is implemented in ```scheme.py``` and the main functions for 
+the prover and the verifier are listed in ```posw.py``` that can be imported
+for use in other areas. You can run a small test by running 
+```python3 posw.py``` 
+which should return true. The file simulates running the scheme for an honest 
+prover and verifier. 
+
+## Parameters 
+
+The parameters described in the paper (and are named in the same way in the source code) are
+* N
+* w
+* n
+* H
 
 ## Scheme
 The scheme is described in the paper as 
