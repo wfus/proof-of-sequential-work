@@ -2,6 +2,7 @@ import random
 import networkx as nx
 import math
 from util import sha256, sha256H
+import secrets
 # import copy
 # import matplotlib.pyplot as plt
 
@@ -169,7 +170,7 @@ Selects chi from (0, 1)^w as the nonce
 """
 def statement(w=DEFAULT_w, secure=True):
     if secure:
-        raise NotImplementedError
+        return secrets.randbelow(2**w - 1)
     else:
         return random.randint(0, 2**w - 1)
 
@@ -194,11 +195,8 @@ Samples a random challenge gamma <- (0, 1)^{w * t}, essentially a list
 of random gamma_1, ..., gamma_t sampled from (0, 1)^w
 """
 def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, secure=True):
-    if secure:
-        raise NotImplementedError
-    else:
-        raise NotImplementedError
-    return [BinaryString(n, random.randint(0, 2**n - 1)) for i in range(t)]
+    challenged_leaf = secrets.randbelow(2**n) if secure else random.randint(0, 2**n - 1)
+    return [BinaryString(n, challenged_leaf) for _ in range(t)]
 
 
 """
