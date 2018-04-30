@@ -25,8 +25,7 @@ Relevant Parameters described in the paper
 
 """
 Need to construct a custom class for binary string, 
-since for our DAG we have to differentiate 
-01 and 1, unfortunately.
+since for our DAG we have to differentiate 01 and 1.
 Therefore we will need both the length of the binary string 
 and the value converted into an integer.
 The {EMPTY} binary string will be length 0, intvalue 0  
