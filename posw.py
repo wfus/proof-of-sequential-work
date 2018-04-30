@@ -314,14 +314,14 @@ def test_path_siblings():
 
 
 if __name__ == '__main__':
-    # random_tests() 
-    # graph_tests()
-    # class_tests()
-    # test_path_siblings()
-    # compute_posw(N=15)
-    print("Raymond.")
+    print("\nStarting test run with honest Prover and Verifier...")
     chi = statement()
+    print("\tGenerated statement: {}".format(chi))
     G = compute_posw(chi)
+    print("\tComputed PoSW.".format(chi))
     gamma = opening_challenge()
+    print("\tCreated challenge gamma with {} challenges.".format(len(gamma)))
     tau = compute_open(chi, G, gamma)
-    print(compute_verify(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau))
+    print("\tComputed proof tau.")
+    print("\tVerification: {}".format(compute_verify(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)))
+    print("")
