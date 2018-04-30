@@ -23,13 +23,14 @@ Relevant Parameters described in the paper
     0 <= m <= n
 """
 
-
-# Need to construct a custom class for binary string, 
-# since for our DAG we have to differentiate 
-# 01 and 1, unfortunately.
-# Therefore we will need both the length of the binary string 
-# and the value converted into an integer.
-# The {EMPTY} binary string will be length 0, intvalue 0  
+"""
+Need to construct a custom class for binary string, 
+since for our DAG we have to differentiate 
+01 and 1, unfortunately.
+Therefore we will need both the length of the binary string 
+and the value converted into an integer.
+The {EMPTY} binary string will be length 0, intvalue 0  
+"""
 class BinaryString:
     def __init__(self, length, intvalue):
         assert(2 ** length > intvalue)
@@ -64,6 +65,7 @@ class BinaryString:
         return ''.join(list(map(str, self.get_bit_list())))
     
     # Flips the n^th least significant bit from 0 to 1 or vice versa
+    # Returns a new BinaryString object, does not modify original
     def flip_bit(self, n):
         assert(self.length > n)
         if self.get_bit(n) == 0:
@@ -83,11 +85,13 @@ class BinaryString:
                 self.flip_bit(self, n)
 
 
-    # Gets the nth least significant bit. 
+    # Gets the nth least significant bit.  
     def get_bit(self, n):
         assert(self.length > n)
         return (self.intvalue >> n) % 2
-    
+
+    # Gets the list of the bit representation. Returns a list of 
+    # 0s and 1s as integers. Starts with least significant bit. 
     def get_bit_list(self):
         lst = []
         curr_int = self.intvalue
@@ -96,12 +100,14 @@ class BinaryString:
             curr_int = (curr_int >> 1)
         return lst 
 
-
+    # Truncates the least significant bit of the binary string. Returns
+    # a new binary string object. 
     def truncate_last_bit(self):
         new_bin = BinaryString(self.length, self.intvalue)
         new_bin.intvalue = (self.intvalue >> 1)
         new_bin.length = self.length-1
         return new_bin
+
 
 
 
