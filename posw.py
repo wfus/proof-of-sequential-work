@@ -167,8 +167,11 @@ def construct_dag(n=DEFAULT_n):
 """
 Selects chi from (0, 1)^w as the nonce
 """
-def statement(w=DEFAULT_w):
-    return random.randint(0, 2**w - 1)
+def statement(w=DEFAULT_w, secure=True):
+    if secure:
+        raise NotImplementedError
+    else:
+        return random.randint(0, 2**w - 1)
 
 
 """
@@ -190,7 +193,11 @@ def compute_posw(chi, n=DEFAULT_n, H=sha256H):
 Samples a random challenge gamma <- (0, 1)^{w * t}, essentially a list
 of random gamma_1, ..., gamma_t sampled from (0, 1)^w
 """
-def opening_challenge(n=DEFAULT_n, t=DEFAULT_t):
+def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, secure=True):
+    if secure:
+        raise NotImplementedError
+    else:
+        raise NotImplementedError
     return [BinaryString(n, random.randint(0, 2**n - 1)) for i in range(t)]
 
 
