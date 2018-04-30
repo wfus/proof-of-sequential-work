@@ -1,8 +1,7 @@
 # proof-of-sequential-work
 Small repo for implementing the 2018 EUROCRYPT paper ["Simple Proofs of Sequential Work" by Cohen and Pietrzak](https://eprint.iacr.org/2018/183.pdf). Also used as part of our CS244 project in Professor Kung's class at Harvard University.
 
-This is currently a __experimental__ repository. We currently do not use
-cryptographically secure primitives because this is for __testing__.
+This is currently a __experimental__ repository. 
 
 __DO NOT USE THE CURRENT VERSION OF THIS REPO IN ANY REAL WORLD PROGRAM__.
 
@@ -11,9 +10,14 @@ I repeat
 __DO NOT USE THE CURRENT VERSION OF THIS REPO IN ANY REAL WORLD PROGRAM__.
 
 This is used as a proof of concept before we implement the scheme with 
-cryptographically secure primitives. 
+cryptographically secure primitives, possibly in a different programming language. 
 
 ## Usage
+
+__Python 3.6 is REQUIRED to run this code using your computer's entropy source__. 
+This is because we use the `secrets` module first introduced in Python 3.6 to 
+get better random numbers than python's old `random` library.  
+
 
 Most of the scheme is implemented in ```scheme.py``` and the main functions for 
 the prover and the verifier are listed in ```posw.py``` that can be imported
