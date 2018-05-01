@@ -51,3 +51,8 @@ The DAG used for the scheme is also constructed with specifications
 ## Acknowledgements
 Many thanks to Professor Kung for his intellectually interesting discussions, as well as Marcus Comiter for all the help in the class. 
 
+
+## Papers and Further Links
+
+* [Balloon Hashing](https://eprint.iacr.org/2016/027.pdf) Dan Boneh, Henry Corrigan-Gibbs, and Stuart Schechter. A Memory-Hard Function Providing Provable Protection Against Sequential Attacks
+
