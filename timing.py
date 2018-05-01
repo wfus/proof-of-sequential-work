@@ -2,11 +2,11 @@ from posw import *
 from util import sha256, sha256H
 import matplotlib.pyplot as plt
 import time
+import timeit
 
 MAX_N_LEN = 20 
 
-
-if __name__ == '__main__':
+def time_posw_construction():
     time_posw = []
     time_verify = []
     for n in range(1, MAX_N_LEN):
@@ -37,3 +37,7 @@ if __name__ == '__main__':
     plt.ylabel("Time (s)")
     plt.plot(range(1, MAX_N_LEN), time_verify)
     plt.show()
+
+
+if __name__ == '__main__':
+    print(timeit.timeit("statement()", setup="from posw import statement", number=1000))
