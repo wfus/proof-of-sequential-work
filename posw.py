@@ -194,7 +194,9 @@ def compute_posw(chi, n=DEFAULT_n, H=sha256H):
 Samples a random challenge gamma <- (0, 1)^{w * t}, essentially a list
 of random gamma_1, ..., gamma_t sampled from (0, 1)^w
 """
-def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, secure=True):
+def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, secure=True, s=None):
+    if s != None:
+        random.seed(s)
     challenged_leaf = secrets.randbelow(2**n) if secure else random.randint(0, 2**n - 1)
     return [BinaryString(n, challenged_leaf) for _ in range(t)]
 
@@ -303,19 +305,28 @@ def verify_verify_chains(tag_chains, chi, phi, gamma, tau, n=DEFAULT_n, H=sha256
         
 
 if __name__ == '__main__':
+    seed = 10
+    num_challenges = 5
+    chi = 6
+
     print("\nStarting test run with honest Prover and Verifier...")
-    chi = statement()
-    print("\tGenerated statement: {}".format(chi))
+    print("\tStatement: {}".format(chi))
     G = compute_posw(chi)
     print("\tComputed PoSW.".format(chi))
-    gamma = opening_challenge()
-    #print(gamma)
+    #The seed would be made available to the
+    #prover at this point
+    gamma = opening_challenge(secure=False, s=seed, t=num_challenges)
     print("\tCreated challenge gamma with {} challenges.".format(len(gamma)))
     tau = compute_open(chi, G, gamma)
-
-    something = get_requested_verify_chains(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)
-
-    print("new scheme "+str(verify_verify_chains(something, chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)))
+    print(tau)
+    print("\tCreating a proof")
+    chains = get_requested_verify_chains(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)
+    proof = {'s':seed, 'chains':chains, 'root_node':G.node[BinaryString(0, 0)]['label'] }
+    
+    
+    #proof would be sent to external verifier here
+    gamma = opening_challenge(secure=False, s=proof['s'], t=num_challenges)
+    print("\tnew scheme "+str(verify_verify_chains(proof['chains'], chi, proof['root_node'], gamma, tau)))
     print("\tComputed proof tau.")
     print("\tVerification: {}".format(compute_verify(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)))
     print("")
