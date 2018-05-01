@@ -11,6 +11,8 @@ __DO NOT USE THE CURRENT VERSION OF THIS REPO IN ANY REAL WORLD PROGRAM__.
 
 This is used as a proof of concept before we implement the scheme with 
 cryptographically secure primitives, possibly in a different programming language. 
+Also you really shouldn't be running a random persons repository that
+probably has crippling security vulnerabilities anyway...
 
 ## Usage
 
@@ -29,6 +31,10 @@ prover and verifier.
 Install the python requirements with 
 ```
 pip install -r requirements.txt
+```
+Then, you can run a simple test with 
+```
+python3 posw.py
 ```
 
 ## Parameters 
