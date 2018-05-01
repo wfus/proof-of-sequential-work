@@ -2,6 +2,7 @@ import random
 import networkx as nx
 import math
 from util import sha256, sha256H
+import secrets
 # import copy
 # import matplotlib.pyplot as plt
 
@@ -169,7 +170,7 @@ Selects chi from (0, 1)^w as the nonce
 """
 def statement(w=DEFAULT_w, secure=True):
     if secure:
-        raise NotImplementedError
+        return secrets.randbelow(2**w - 1)
     else:
         return random.randint(0, 2**w - 1)
 
@@ -194,11 +195,8 @@ Samples a random challenge gamma <- (0, 1)^{w * t}, essentially a list
 of random gamma_1, ..., gamma_t sampled from (0, 1)^w
 """
 def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, secure=True):
-    if secure:
-        raise NotImplementedError
-    else:
-        raise NotImplementedError
-    return [BinaryString(n, random.randint(0, 2**n - 1)) for i in range(t)]
+    challenged_leaf = secrets.randbelow(2**n) if secure else random.randint(0, 2**n - 1)
+    return [BinaryString(n, challenged_leaf) for _ in range(t)]
 
 
 """
@@ -269,61 +267,15 @@ def compute_verify(chi, phi, gamma, tau, n=DEFAULT_n, H=sha256H):
     return True
 
 
-
-def random_tests(): 
-    print("Selecting from (0, 1)^1")
-    print(opening_challenge(t=10))
-
-    print(sha256H(1, 10))
-    print(sha256H(11, 0))
-    print(sha256H(100, 1))
-    print(sha256H(11, 100))
-
-    g = nx.DiGraph()
-    g.add_node(1)
-    g.add_nodes_from([2, 3])
-    g.add_edge(1, 2)    
-    print(g.nodes)
-
-    print(BinaryString(3, 3))
-    print(BinaryString(7, 31))
-    print(BinaryString(1, 1))
-    print(BinaryString(1, 0))
-
-
-def graph_tests():
-    G = compute_posw()
-    print(G.nodes)
-
-
-def class_tests():
-    test1 = BinaryString(5, 10)
-    test2 = BinaryString(1, 1)
-    test3 = BinaryString(0, 0)
-    test4 = BinaryString(10, 231)
-    print(test1.get_bit_list())
-    print(test2.get_bit_list())
-    print(test3.get_bit_list())
-    print(test4.get_bit_list())
-
-
-def test_path_siblings():
-    for x in path_siblings(BinaryString(5, 10)):
-        print(x)
-
-    for x in path_siblings(BinaryString(4, 10)):
-        print(x)
-
-
 if __name__ == '__main__':
-    # random_tests() 
-    # graph_tests()
-    # class_tests()
-    # test_path_siblings()
-    # compute_posw(N=15)
-    print("Raymond.")
+    print("\nStarting test run with honest Prover and Verifier...")
     chi = statement()
+    print("\tGenerated statement: {}".format(chi))
     G = compute_posw(chi)
+    print("\tComputed PoSW.".format(chi))
     gamma = opening_challenge()
+    print("\tCreated challenge gamma with {} challenges.".format(len(gamma)))
     tau = compute_open(chi, G, gamma)
-    print(compute_verify(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau))
+    print("\tComputed proof tau.")
+    print("\tVerification: {}".format(compute_verify(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)))
+    print("")
