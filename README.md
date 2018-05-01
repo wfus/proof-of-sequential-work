@@ -11,6 +11,8 @@ __DO NOT USE THE CURRENT VERSION OF THIS REPO IN ANY REAL WORLD PROGRAM__.
 
 This is used as a proof of concept before we implement the scheme with 
 cryptographically secure primitives, possibly in a different programming language. 
+Also you really shouldn't be running a random persons repository that
+probably has crippling security vulnerabilities anyway...
 
 ## Usage
 
@@ -29,6 +31,10 @@ prover and verifier.
 Install the python requirements with 
 ```
 pip install -r requirements.txt
+```
+Then, you can run a simple test with 
+```
+python3 posw.py
 ```
 
 ## Parameters 
@@ -55,4 +61,8 @@ Many thanks to Professor Kung for his intellectually interesting discussions, as
 ## Papers and Further Links
 
 * [Balloon Hashing](https://eprint.iacr.org/2016/027.pdf) Dan Boneh, Henry Corrigan-Gibbs, and Stuart Schechter. A Memory-Hard Function Providing Provable Protection Against Sequential Attacks
+
+* [Publicly Verifiable Proofs of Sequential Work](https://eprint.iacr.org/2011/553.pdf) The earlier paper that this repository is based on, by Professor Salil Vadhan.
+
+* [Simple Proofs of Sequential Work](https://eprint.iacr.org/2018/183.pdf) The paper that this repository is based on. Was presented in Eurocrypt 2018.
 
