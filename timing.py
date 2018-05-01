@@ -40,4 +40,13 @@ def time_posw_construction():
 
 
 if __name__ == '__main__':
-    print(timeit.timeit("statement()", setup="from posw import statement", number=1000))
+    statement_time = timeit.timeit("statement()", setup="from posw import statement", number=1000)
+    print("Average statement time: {}".format(statement_time / 1000.0))
+    balloon_hash_time = timeit.timeit("balloon_hash('ht', 'kung', space=100, time=100)", setup="from balloon import balloon_hash", number=10)
+    print("Average balloon hash time with t=100: {}".format(balloon_hash_time / 10.0))
+    balloon_hash_time = timeit.timeit("balloon_hash('ht', 'kung', space=100, time=200)", setup="from balloon import balloon_hash", number=10)
+    print("Average balloon hash time with t=200: {}".format(balloon_hash_time / 10.0))
+    balloon_hash_time = timeit.timeit("balloon_hash('ht', 'kung', space=100, time=300)", setup="from balloon import balloon_hash", number=10)
+    print("Average balloon hash time with t=300: {}".format(balloon_hash_time / 10.0))
+    balloon_hash_time = timeit.timeit("balloon_hash('ht', 'kung', space=100, time=400)", setup="from balloon import balloon_hash", number=10)
+    print("Average balloon hash time with t=400: {}".format(balloon_hash_time / 10.0))
