@@ -266,6 +266,41 @@ def compute_verify(chi, phi, gamma, tau, n=DEFAULT_n, H=sha256H):
             return False
     return True
 
+"""
+
+"""
+def get_requested_verify_chains(chi, phi, gamma, tau, n=DEFAULT_n, H=sha256H):
+    ret = []
+    for i in range(len(gamma)):
+        # Check validity of l_{gamma_i}
+        tag, s_tags = tau[i]
+        s_tags[gamma[i]] = tag
+        hash_str = str(gamma[i])
+        for parent in get_parents(gamma[i], n):
+            if parent not in s_tags:
+                assert(False)
+            hash_str += s_tags[parent]
+        if tag != H(chi, hash_str):
+            assert(False)
+        ret += [s_tags]
+    return ret
+
+def verify_verify_chains(tag_chains, chi, phi, gamma, tau, n=DEFAULT_n, H=sha256H ):
+    for i in range(len(gamma)):
+        s_tags = tag_chains[i]
+        # Check "Merkle-like commitment"
+        for j in reversed(range(n)):
+            hash_str = str(gamma[i])[:j]
+            gamma_l_0 = bits_to_int(gamma[i].get_bit_list()[:j] + [0])
+            gamma_l_1 = bits_to_int(gamma[i].get_bit_list()[:j] + [1])
+            gamma_l = bits_to_int(gamma[i].get_bit_list()[:j])
+            hash_str += s_tags[BinaryString(j + 1, gamma_l_0)]
+            hash_str += s_tags[BinaryString(j + 1, gamma_l_1)]
+            s_tags[BinaryString(j, gamma_l)] = H(chi, hash_str)
+        if phi != s_tags[BinaryString(0, 0)]:
+            return False
+    return True           
+        
 
 if __name__ == '__main__':
     print("\nStarting test run with honest Prover and Verifier...")
@@ -274,8 +309,13 @@ if __name__ == '__main__':
     G = compute_posw(chi)
     print("\tComputed PoSW.".format(chi))
     gamma = opening_challenge()
+    #print(gamma)
     print("\tCreated challenge gamma with {} challenges.".format(len(gamma)))
     tau = compute_open(chi, G, gamma)
+
+    something = get_requested_verify_chains(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)
+
+    print("new scheme "+str(verify_verify_chains(something, chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)))
     print("\tComputed proof tau.")
     print("\tVerification: {}".format(compute_verify(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)))
     print("")

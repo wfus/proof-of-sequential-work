@@ -1,6 +1,5 @@
 from posw import *
 from util import sha256, sha256H
-import matplotlib.pyplot as plt
 import time
 import timeit
 
