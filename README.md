@@ -56,3 +56,7 @@ Many thanks to Professor Kung for his intellectually interesting discussions, as
 
 * [Balloon Hashing](https://eprint.iacr.org/2016/027.pdf) Dan Boneh, Henry Corrigan-Gibbs, and Stuart Schechter. A Memory-Hard Function Providing Provable Protection Against Sequential Attacks
 
+* [Publicly Verifiable Proofs of Sequential Work](https://eprint.iacr.org/2011/553.pdf) The earlier paper that this repository is based on, by Professor Salil Vadhan.
+
+* [Simple Proofs of Sequential Work](https://eprint.iacr.org/2018/183.pdf) The paper that this repository is based on. Was presented in Eurocrypt 2018.
+
