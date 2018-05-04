@@ -186,7 +186,9 @@ def compute_posw(chi, n=DEFAULT_n, H=sha256H):
 Samples a random challenge gamma <- (0, 1)^{w * t}, essentially a list
 of random gamma_1, ..., gamma_t sampled from (0, 1)^w
 """
-def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, secure=True):
+def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, secure=True, s=None):
+    if not secure and s:
+        random.seed(s)
     challenged_leaf = secrets.randbelow(2**n) if secure else random.randint(0, 2**n - 1)
     return [BinaryString(n, challenged_leaf) for _ in range(t)]
 
