@@ -3,8 +3,6 @@ import networkx as nx
 import math
 from util import sha256, sha256H
 import secrets
-# import copy
-# import matplotlib.pyplot as plt
 
 
 """
@@ -119,6 +117,7 @@ def bits_to_int(bit_list):
         val += int(bit_list[i])
     return val
 
+
 """
 Get parents of a node in the DAG
 """
@@ -227,6 +226,7 @@ def compute_open(chi, G, gamma):
             label_gamma_i_siblings[sib] = G.node[sib]['label']
         tuple_lst += [(label_gamma_i, label_gamma_i_siblings)]
     return tuple_lst 
+
 
 """
 Verifier computes and outputs verify^H(chi, N, phi, gamma, tau)
