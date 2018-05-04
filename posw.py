@@ -3,6 +3,7 @@ import networkx as nx
 import math
 from util import sha256, sha256H
 import secrets
+import argparse
 
 
 """
@@ -85,7 +86,7 @@ class BinaryString:
     def get_bit_list(self):
         lst = []
         curr_int = self.intvalue
-        for x in range(self.length):
+        for _ in range(self.length):
             lst = [curr_int % 2] + lst
             curr_int = (curr_int >> 1)
         return lst 
@@ -260,12 +261,19 @@ def compute_verify(chi, phi, gamma, tau, n=DEFAULT_n, H=sha256H):
 
 
 if __name__ == '__main__':
+    
+    parser = argparse.ArgumentParser(description='Runs a test prover-verifier proof of sequential work'
+        + ' assuming both parties are honest.')
+    parser.add_argument('-n', type=int, help='depth of the DAG', default=DEFAULT_n)
+    parser.add_argument('-t', type=int,help='number of challenges in gamma', default=DEFAULT_t)
+    args = parser.parse_args()
+
     print("\nStarting test run with honest Prover and Verifier...")
     chi = statement()
     print("\tGenerated statement: {}".format(chi))
-    G = compute_posw(chi)
+    G = compute_posw(chi, n=args.n)
     print("\tComputed PoSW.".format(chi))
-    gamma = opening_challenge()
+    gamma = opening_challenge(t=args.t)
     print("\tCreated challenge gamma with {} challenges.".format(len(gamma)))
     tau = compute_open(chi, G, gamma)
     print("\tComputed proof tau.")

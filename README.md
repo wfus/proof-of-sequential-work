@@ -34,7 +34,16 @@ pip install -r requirements.txt
 ```
 Then, you can run a simple test with 
 ```
-python3 posw.py
+python3 posw.py --help
+usage: posw.py [-h] [-n N] [-t T]
+
+Runs a test prover-verifier proof of sequential work assuming both parties are
+honest.
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -n N        depth of the DAG
+  -t T        number of challenges in gamma
 ```
 
 ## Parameters 
