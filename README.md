@@ -45,7 +45,7 @@ optional arguments:
   -n N        depth of the DAG
   -t T        number of challenges in gamma
 ```
-
+Parameter selection is important. Try not to go over 20 for n, t can be anywhere from 0 to 2^n and it works fine.
 ## Parameters 
 
 The parameters described in the paper (and are named in the same way in the source code) are
