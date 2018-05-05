@@ -54,14 +54,6 @@ The parameters described in the paper (and are named in the same way in the sour
 * __w__: A statistical security parameter from which the random nonce is generated from
 * __H__: A random oracle (we used default of sha256) that maps (0, 1)* to (0, 1)^w
 
-## Scheme
-The scheme is described in the paper as 
-
-<img src="docs/graphdef.png" width="500" align="middle">
-
-The DAG used for the scheme is also constructed with specifications
-
-![DAG Specifications](docs/graphdef.png)
 
 ## Acknowledgements
 Many thanks to Professor Kung for his intellectually interesting discussions, as well as Marcus Comiter for all the help in the class. 
