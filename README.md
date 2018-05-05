@@ -57,7 +57,7 @@ The parameters described in the paper (and are named in the same way in the sour
 ## Scheme
 The scheme is described in the paper as 
 
-![Overall Scheme](docs/overallscheme.png)
+<img src="docs/graphdef.png" width="400">
 
 The DAG used for the scheme is also constructed with specifications
 
