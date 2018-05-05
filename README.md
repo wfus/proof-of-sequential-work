@@ -29,7 +29,10 @@ which should return true. The file simulates running the scheme for an honest
 prover and verifier. 
 
 If using a Mac, you can use our ```install.sh``` script to install the required dependencies. Unfortunately for Ubuntu 16.04 and older distros, installing ```python3.6``` is a bit annoying - standard repositories still only support up to python3.5. 
-
+```
+chmod +x install.sh
+./install.sh
+```
 Install the python requirements with 
 ```
 pip install -r requirements.txt
