@@ -15,33 +15,33 @@ Relevant Parameters described in the paper
     H: (0, 1)^{<= w(n+1)} -> (0, 1)^w as a random oracle
 
     t: A statistical security parameter
-    
+
     w: A statistical security parameter
 
     M: Memory available to the prover, of the form
-        (t + n*t + 1 + 2^{m+1})w, 
+        (t + n*t + 1 + 2^{m+1})w,
     0 <= m <= n
 """
 
 """
-Need to construct a custom class for binary string, 
+Need to construct a custom class for binary string,
 since for our DAG we have to differentiate 01 and 1.
-Therefore we will need both the length of the binary string 
+Therefore we will need both the length of the binary string
 and the value converted into an integer.
-The {EMPTY} binary string will be length 0, intvalue 0  
+The {EMPTY} binary string will be length 0, intvalue 0
 """
 class BinaryString:
     def __init__(self, length, intvalue):
         assert(2 ** length > intvalue)
         self.length = length
         self.intvalue = intvalue
-    
+
     def __eq__(self, other):
         return other and self.length == other.length and self.intvalue == other.intvalue
 
     def __ne__(self, other):
         return not self.__eq__(other)
-    
+
     def __hash__(self):
         return hash((self.length, self.intvalue))
 
@@ -54,15 +54,15 @@ class BinaryString:
 
     def __str__(self):
         return ''.join(list(map(str, self.get_bit_list())))
-    
+
     # Flips the n^th least significant bit from 0 to 1 or vice versa
     # Returns a new BinaryString object, does not modify original
     def flip_bit(self, n):
         assert(self.length > n)
         if self.get_bit(n) == 0:
-            self.intvalue = self.intvalue + (2 ** n) 
+            self.intvalue = self.intvalue + (2 ** n)
         else:
-            self.intvalue = self.intvalue - (2 ** n) 
+            self.intvalue = self.intvalue - (2 ** n)
         return BinaryString(self.length, self.intvalue)
 
     def set_bit(self, n, bitvalue):
@@ -76,23 +76,23 @@ class BinaryString:
                 self.flip_bit(self, n)
 
 
-    # Gets the nth least significant bit.  
+    # Gets the nth least significant bit.
     def get_bit(self, n):
         assert(self.length > n)
         return (self.intvalue >> n) % 2
 
-    # Gets the list of the bit representation. Returns a list of 
-    # 0s and 1s as integers. Starts with least significant bit. 
+    # Gets the list of the bit representation. Returns a list of
+    # 0s and 1s as integers. Starts with least significant bit.
     def get_bit_list(self):
         lst = []
         curr_int = self.intvalue
         for _ in range(self.length):
             lst = [curr_int % 2] + lst
             curr_int = (curr_int >> 1)
-        return lst 
+        return lst
 
     # Truncates the least significant bit of the binary string. Returns
-    # a new binary string object. 
+    # a new binary string object.
     def truncate_last_bit(self):
         new_bin = BinaryString(self.length, self.intvalue)
         new_bin.intvalue = (self.intvalue >> 1)
@@ -106,7 +106,7 @@ DEFAULT_w = 10
 DEFAULT_t = 2**10 - 1
 DEFAULT_n = 10
 DEFAULT_m = 10
-DEFAULT_N = 2**(DEFAULT_n + 1) - 1 
+DEFAULT_N = 2**(DEFAULT_n + 1) - 1
 
 """
 Converts bit list to integer
@@ -134,7 +134,7 @@ def get_parents(binary_str, n=DEFAULT_n):
         parents.append(BinaryString(length + 1, bits_to_int(bit_list + [0])))
         parents.append(BinaryString(length + 1, bits_to_int(bit_list + [1])))
     return sorted(parents)
-    
+
 
 """
 Creates the DAG for a given size of graph
@@ -168,7 +168,7 @@ def statement(w=DEFAULT_w, secure=True):
 
 
 """
-Computes the function PoSW^Hx(N). It stores the the labels 
+Computes the function PoSW^Hx(N). It stores the the labels
 phi_P of the m highest layers, and sends the root label
 phi = l_epsilon to the Verifier
 """
@@ -194,41 +194,41 @@ def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, secure=True, s=None):
 
 
 """
-Takes in an instance of class BinaryString and returns a list of the 
+Takes in an instance of class BinaryString and returns a list of the
 siblings of the nodes of the path to to root of a binary tree. Also
-returns the node itself, so there are N+1 items in the list for a 
-tree with length N. 
+returns the node itself, so there are N+1 items in the list for a
+tree with length N.
 """
 def path_siblings(bitstring):
     path_lst = [bitstring]
     new_bitstring = BinaryString(bitstring.length, bitstring.intvalue)
     for i in range(bitstring.length):
         path_lst += [new_bitstring.flip_bit(0)]
-        new_bitstring = new_bitstring.truncate_last_bit() 
+        new_bitstring = new_bitstring.truncate_last_bit()
     return path_lst
 
 
 """
-Prover computes tau := open^H(chi, N, phi_P, gamma) and sends it to 
+Prover computes tau := open^H(chi, N, phi_P, gamma) and sends it to
 the Verifier. phi_P will be passed in using a NetworkX graph G
 Returns a list of tuples described by
     (l_{gamma_i}, dict{alternate_siblings: l_{the alternate siblings})
 """
 def compute_open(chi, G, gamma):
     # On a challenge gamma = [gamma_1, ..., gamma_n]
-    # tau the label of node gamma_i, l_{gamma_i}, and all the 
+    # tau the label of node gamma_i, l_{gamma_i}, and all the
     # labels of the siblings of the nodes of path from gamma_i to root.
     # Example for gamma_i = 0101
     # tau contains labels of: 0101, 0100, 011, 00 and 1
     tuple_lst = []
-    # First get the list 
+    # First get the list
     for gamma_i in gamma:
         label_gamma_i = G.node[gamma_i]['label']
         label_gamma_i_siblings = {}
         for sib in path_siblings(gamma_i):
             label_gamma_i_siblings[sib] = G.node[sib]['label']
         tuple_lst += [(label_gamma_i, label_gamma_i_siblings)]
-    return tuple_lst 
+    return tuple_lst
 
 
 """
@@ -263,7 +263,7 @@ def compute_verify(chi, phi, gamma, tau, n=DEFAULT_n, H=sha256H):
 
 
 if __name__ == '__main__':
-    
+
     parser = argparse.ArgumentParser(description='Runs a test prover-verifier proof of sequential work'
         + ' assuming both parties are honest.')
     parser.add_argument('-n', type=int, help='depth of the DAG', default=DEFAULT_n)

@@ -5,7 +5,7 @@ from posw import *
 from util import *
 
 
-def random_tests(): 
+def random_tests():
     print("Selecting from (0, 1)^1")
     print(opening_challenge(t=10))
 
@@ -17,7 +17,7 @@ def random_tests():
     g = nx.DiGraph()
     g.add_node(1)
     g.add_nodes_from([2, 3])
-    g.add_edge(1, 2)    
+    g.add_edge(1, 2)
     print(g.nodes)
 
     print(BinaryString(3, 3))
@@ -27,7 +27,8 @@ def random_tests():
 
 
 def graph_tests():
-    G = compute_posw()
+    chi = statement()
+    G = compute_posw(chi)
     print(G.nodes)
 
 
