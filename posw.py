@@ -189,8 +189,7 @@ of random gamma_1, ..., gamma_t sampled from (0, 1)^w
 def opening_challenge(n=DEFAULT_n, t=DEFAULT_t, secure=True, s=None):
     if not secure and s:
         random.seed(s)
-    challenged_leaf = secrets.randbelow(2**n) if secure else random.randint(0, 2**n - 1)
-    return [BinaryString(n, challenged_leaf) for _ in range(t)]
+    return [BinaryString(n, secrets.randbelow(2**n) if secure else random.randint(0, 2**n - 1)) for _ in range(t)]
 
 
 """
@@ -275,9 +274,9 @@ if __name__ == '__main__':
     print("\tGenerated statement: {}".format(chi))
     G = compute_posw(chi, n=args.n)
     print("\tComputed PoSW.".format(chi))
-    gamma = opening_challenge(t=args.t)
+    gamma = opening_challenge(n=args.n, t=args.t)
     print("\tCreated challenge gamma with {} challenges.".format(len(gamma)))
     tau = compute_open(chi, G, gamma)
     print("\tComputed proof tau.")
-    print("\tVerification: {}".format(compute_verify(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau)))
+    print("\tVerification: {}".format(compute_verify(chi, G.node[BinaryString(0, 0)]['label'], gamma, tau, n=args.n)))
     print("")
